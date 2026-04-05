@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Senxit - FF Sensitivity & DPI Database</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
+            min-height: 100vh;
+            color: #eef2ff;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 30%, #10182f, #06090f);
+        }
+        .auth-card {
+            background: rgba(18, 25, 45, 0.9);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 2rem;
+            width: 90%;
+            max-width: 420px;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .auth-card h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff, #7aa2f7);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .input-field {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            margin: 0.6rem 0;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 1.2rem;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        .input-field:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+        }
+        textarea.input-field {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .btn {
+            background: linear-gradient(95deg, #3b82f6, #2563eb);
+            border: none;
+            padding: 0.8rem;
+            width: 100%;
+            border-radius: 2rem;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 1rem;
+        }
+        .btn-loading {
+            background: #475569;
+            cursor: wait;
+            opacity: 0.7;
+        }
+        .switch-text {
+            text-align: center;
+            margin-top: 1.2rem;
+            font-size: 0.85rem;
+        }
+        .switch-blue {
+            color: #60a5fa;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .taskbar {
+            background: rgba(12, 18, 34, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 3rem;
+            padding: 0.6rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-wrap: wrap;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, #f97316, #facc15);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .nav-icons {
+            display: flex;
+            gap: 1.8rem;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.4rem 0.8rem;
+            border-radius: 2rem;
+            background: rgba(255,255,255,0.03);
+            position: relative;
+        }
+        .nav-item i {
+            font-size: 1.4rem;
+            margin-bottom: 0.2rem;
+        }
+        .nav-item span {
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .nav-item.active {
+            background: #3b82f6;
+            color: white;
+        }
+        .notification-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            background-color: #ef4444;
+            border-radius: 50%;
+            border: 2px solid #0a0f1e;
+        }
+        .logout-btn {
+            background: #dc2626;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .panel {
+            background: #0f1422e0;
+            backdrop-filter: blur(4px);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            border: 1px solid #2d3748;
+        }
+        .search-bar {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 2rem;
+            background: #1e293b;
+            border: none;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+        .mobile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
+        }
+        .mobile-card {
+            background: #111827;
+            border-radius: 1.5rem;
+            padding: 1rem;
+            border: 1px solid #2d3a5e;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .mobile-card:hover {
+            transform: scale(1.02);
+            border-color: #3b82f6;
+        }
+        .sensi-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.4rem 0;
+            font-size: 0.85rem;
+        }
+        .copy-btn {
+            background: #2563eb;
+            border: none;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            background: #0a0f1a;
+            border-radius: 1.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            width: 100%;
+        }
+        .message-user {
+            justify-content: flex-end;
+        }
+        .message-admin {
+            justify-content: flex-start;
+        }
+        .bubble {
+            padding: 0.6rem 1rem;
+            max-width: 70%;
+            word-break: break-word;
+            border-radius: 1.2rem;
+        }
+        .bubble-user {
+            background: #2563eb;
+            color: white;
+            border-radius: 1.2rem 1.2rem 0 1.2rem;
+        }
+        .bubble-admin {
+            background: #334155;
+            color: #f1f5f9;
+            border-radius: 1.2rem 1.2rem 1.2rem 0;
+        }
+        .user-list-item {
+            background: #1e293b;
+            margin: 0.5rem 0;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .admin-msg-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+            align-items: center;
+        }
+        .small-input {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: 2rem;
+            background: #0f172a;
+            border: 1px solid #3b82f6;
+            color: white;
+        }
+        .conversation-view {
+            background: #0f172a;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        .back-btn {
+            background: #475569;
+            margin-bottom: 1rem;
+            width: auto;
+            padding: 0.4rem 1rem;
+        }
+        .inbox-item {
+            background: #1e293b;
+            margin: 0.5rem 0;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .inbox-item:hover {
+            background: #2d3a5e;
+        }
+        .unread-badge {
+            background: #ef4444;
+            color: white;
+            border-radius: 999px;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        .sensi-item {
+            background: #1e293b;
+            margin: 0.5rem 0;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .tutorial-card {
+            background: #1e293b;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .watch-btn {
+            background: #f97316;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #1e293b;
+            border-radius: 2rem;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid #3b82f6;
+        }
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+        .file-card {
+            background: #111827;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid #2d3a5e;
+        }
+        .file-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+        }
+        .file-thumb {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            background: #0f172a;
+        }
+        .file-info {
+            padding: 1rem;
+        }
+        .file-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+        .file-desc {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+        .file-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            justify-content: center;
+            align-items: center;
+            z-index: 1100;
+        }
+        .file-modal-content {
+            background: #0f172a;
+            border-radius: 2rem;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow: auto;
+            padding: 1.5rem;
+            position: relative;
+        }
+        .carousel-img {
+            max-width: 100%;
+            max-height: 60vh;
+            object-fit: contain;
+            border-radius: 1rem;
+        }
+        .carousel-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .download-file-btn {
+            background: #10b981;
+            margin-top: 0;
+        }
+        .image-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .preview-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        .image-input-group {
+            background: #1e293b;
+            padding: 0.5rem;
+            border-radius: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .file-input-group {
+            background: #1e293b;
+            padding: 0.5rem;
+            border-radius: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        @media (max-width: 700px) {
+            .nav-icons { gap: 0.8rem; }
+            .taskbar { flex-direction: column; gap: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+    // STORAGE KEYS
+    const STORAGE_USERS = "senxit_users";
+    const STORAGE_SENSITIVITIES = "senxit_sensitivities";
+    const STORAGE_TUTORIALS = "senxit_tutorials";
+    const STORAGE_FILES = "senxit_files";
+
+    let users = [];
+    let sensitivities = {};
+    let tutorials = [];
+    let files = [];
+    let currentUser = null;
+    let currentPanel = "sensi";
+    let adminSubPage = "addSensi";
+    let adminChatTarget = null;
+
+    function loadData() {
+        const storedUsers = localStorage.getItem(STORAGE_USERS);
+        if(storedUsers) users = JSON.parse(storedUsers);
+        else {
+            users = [
+                { uid: "999", name: "ali hassan", level: "Admin", fullName: "ali hassan", createdAt: new Date().toISOString(), isAdmin: true, banned: false, messages: [], lastSeenMsg: Date.now() },
+                { uid: "1001", name: "demoninja", level: "85", fullName: "Raza Khan", createdAt: new Date().toISOString(), isAdmin: false, banned: false, messages: [], lastSeenMsg: Date.now() }
+            ];
+            saveUsers();
+        }
+
+        const storedSensi = localStorage.getItem(STORAGE_SENSITIVITIES);
+        if(storedSensi) sensitivities = JSON.parse(storedSensi);
+        else {
+            const sampleModels = {
+                "iphone 14 pro max": { general: 95, scope2x: 82, scope4x: 78, sniper: 65, freeCamera: 90, dpi: 460, modelDisplay: "iPhone 14 Pro Max" },
+                "iphone 13 pro": { general: 92, scope2x: 80, scope4x: 75, sniper: 62, freeCamera: 88, dpi: 460, modelDisplay: "iPhone 13 Pro" },
+                "samsung s23 ultra": { general: 88, scope2x: 79, scope4x: 72, sniper: 60, freeCamera: 85, dpi: 490, modelDisplay: "Samsung S23 Ultra" },
+                "xiaomi 13 pro": { general: 90, scope2x: 81, scope4x: 77, sniper: 64, freeCamera: 87, dpi: 440, modelDisplay: "Xiaomi 13 Pro" },
+                "realme gt 2": { general: 86, scope2x: 77, scope4x: 71, sniper: 58, freeCamera: 83, dpi: 410, modelDisplay: "Realme GT 2" },
+                "redmagic 8 pro": { general: 99, scope2x: 94, scope4x: 89, sniper: 80, freeCamera: 97, dpi: 500, modelDisplay: "RedMagic 8 Pro" },
+                "nokia g60": { general: 72, scope2x: 65, scope4x: 60, sniper: 48, freeCamera: 70, dpi: 400, modelDisplay: "Nokia G60" }
+            };
+            for(let [key, val] of Object.entries(sampleModels)) sensitivities[key] = val;
+            saveSensitivities();
+        }
+
+        const storedTuts = localStorage.getItem(STORAGE_TUTORIALS);
+        if(storedTuts) tutorials = JSON.parse(storedTuts);
+        else {
+            tutorials = [
+                { id: "1", title: "How to Master Free Fire Sensitivity", link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", createdAt: new Date().toISOString() }
+            ];
+            saveTutorials();
+        }
+
+        const storedFiles = localStorage.getItem(STORAGE_FILES);
+        if(storedFiles) files = JSON.parse(storedFiles);
+        else {
+            files = [];
+        }
+
+        users.forEach(u => {
+            if(!u.messages) u.messages = [];
+            if(!u.lastSeenMsg) u.lastSeenMsg = Date.now();
+            u.messages = u.messages.map(msg => {
+                if(!msg.sender) {
+                    return { text: msg.text, timestamp: msg.timestamp, sender: msg.isSystem ? 'admin' : 'user' };
+                }
+                return msg;
+            });
+        });
+        saveUsers();
+    }
+
+    function saveUsers() { localStorage.setItem(STORAGE_USERS, JSON.stringify(users)); }
+    function saveSensitivities() { localStorage.setItem(STORAGE_SENSITIVITIES, JSON.stringify(sensitivities)); }
+    function saveTutorials() { localStorage.setItem(STORAGE_TUTORIALS, JSON.stringify(tutorials)); }
+    function saveFiles() { localStorage.setItem(STORAGE_FILES, JSON.stringify(files)); }
+
+    function getUnreadCount(user) {
+        if(!user.messages) return 0;
+        return user.messages.filter(msg => new Date(msg.timestamp).getTime() > (user.lastSeenMsg || 0)).length;
+    }
+    function markMessagesRead(user) {
+        user.lastSeenMsg = Date.now();
+        saveUsers();
+    }
+
+    function sendAdminToUser(uid, messageText) {
+        const user = users.find(u => u.uid === uid);
+        if(!user || user.banned) return false;
+        if(!user.messages) user.messages = [];
+        user.messages.push({ text: messageText, timestamp: new Date().toISOString(), sender: 'admin' });
+        saveUsers();
+        return true;
+    }
+    function sendUserToAdmin(messageText) {
+        if(!currentUser || currentUser.isAdmin) return false;
+        const admin = users.find(u => u.uid === "999");
+        if(admin) {
+            if(!admin.messages) admin.messages = [];
+            admin.messages.push({ text: messageText, timestamp: new Date().toISOString(), sender: currentUser.uid });
+            saveUsers();
+        }
+        if(!currentUser.messages) currentUser.messages = [];
+        currentUser.messages.push({ text: messageText, timestamp: new Date().toISOString(), sender: 'user' });
+        saveUsers();
+        return true;
+    }
+
+    function addSensitivity(modelName, general, scope2x, scope4x, sniper, freeCamera, dpi) {
+        const key = modelName.toLowerCase();
+        sensitivities[key] = { general, scope2x, scope4x, sniper, freeCamera, dpi, modelDisplay: modelName };
+        saveSensitivities();
+    }
+    function updateSensitivity(oldKey, newModel, general, scope2x, scope4x, sniper, freeCamera, dpi) {
+        delete sensitivities[oldKey];
+        const newKey = newModel.toLowerCase();
+        sensitivities[newKey] = { general, scope2x, scope4x, sniper, freeCamera, dpi, modelDisplay: newModel };
+        saveSensitivities();
+    }
+    function deleteSensitivity(modelKey) {
+        delete sensitivities[modelKey];
+        saveSensitivities();
+    }
+    function getSensitivity(modelName) {
+        return sensitivities[modelName.toLowerCase()] || null;
+    }
+
+    // Tutorial CRUD
+    function addTutorial(title, link) {
+        tutorials.push({ id: Date.now().toString(), title, link, createdAt: new Date().toISOString() });
+        saveTutorials();
+    }
+    function updateTutorial(tutId, newTitle, newLink) {
+        const index = tutorials.findIndex(t => t.id === tutId);
+        if(index !== -1) {
+            tutorials[index].title = newTitle;
+            tutorials[index].link = newLink;
+            saveTutorials();
+        }
+    }
+    function deleteTutorial(tutId) {
+        tutorials = tutorials.filter(t => t.id !== tutId);
+        saveTutorials();
+    }
+
+    // File CRUD
+    function addFile(title, description, images, fileData) {
+        const newFile = { id: Date.now().toString(), title, description, images, fileData, createdAt: new Date().toISOString() };
+        files.push(newFile);
+        saveFiles();
+    }
+    function deleteFile(fileId) {
+        files = files.filter(f => f.id !== fileId);
+        saveFiles();
+    }
+
+    function readFileAsBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // RENDER ENGINE
+    function render() {
+        const app = document.getElementById("app");
+        if(!currentUser) {
+            app.innerHTML = renderAuthScreen();
+            attachAuthEvents();
+        } else if(currentUser.isAdmin) {
+            app.innerHTML = renderAdminPanel();
+            attachAdminEvents();
+        } else {
+            app.innerHTML = renderUserPanel();
+            attachUserEvents();
+            if(currentPanel === "sensi") renderSensiTab();
+            else if(currentPanel === "messages") renderMessagesTab();
+            else if(currentPanel === "account") renderAccountTab();
+            else if(currentPanel === "tutorial") renderTutorialTab();
+            else if(currentPanel === "files") renderFilesTab();
+        }
+    }
+
+    function renderAuthScreen() {
+        return `
+            <div class="auth-container">
+                <div class="auth-card" id="authCard">
+                    <h2 id="authTitle">🔐 Login to Senxit</h2>
+                    <input type="text" id="uidInput" class="input-field" placeholder="Enter UID">
+                    <button id="loginBtn" class="btn">Login</button>
+                    <div class="switch-text">Doesn't have any account? <span id="showSignup" class="switch-blue">Create account</span></div>
+                    <div id="authError" style="color:#f87171; margin-top:10px; text-align:center;"></div>
+                </div>
+            </div>
+        `;
+    }
+
+    function attachAuthEvents() {
+        let isSignupMode = false;
+        const loginBtn = document.getElementById("loginBtn");
+        const uidInput = document.getElementById("uidInput");
+        const showSignup = document.getElementById("showSignup");
+
+        function switchMode(signup) {
+            isSignupMode = signup;
+            const title = document.getElementById("authTitle");
+            const btn = document.getElementById("loginBtn");
+            const switchText = document.querySelector(".switch-text");
+            if(signup) {
+                title.innerText = "📝 Create Account";
+                btn.innerText = "Create Account";
+                switchText.innerHTML = `Already have account? <span id="showSignup" class="switch-blue">Login</span>`;
+                if(!document.getElementById("signupExtra")) {
+                    const extraDiv = document.createElement("div");
+                    extraDiv.id = "signupExtra";
+                    extraDiv.innerHTML = `
+                        <input type="text" id="signupName" class="input-field" placeholder="ID Name (username)">
+                        <input type="text" id="signupLevel" class="input-field" placeholder="Level">
+                        <input type="text" id="signupFullName" class="input-field" placeholder="Your Full Name">
+                    `;
+                    const authCard = document.getElementById("authCard");
+                    authCard.insertBefore(extraDiv, loginBtn);
+                }
+            } else {
+                title.innerText = "🔐 Login to Senxit";
+                btn.innerText = "Login";
+                switchText.innerHTML = `Doesn't have any account? <span id="showSignup" class="switch-blue">Create account</span>`;
+                const extra = document.getElementById("signupExtra");
+                if(extra) extra.remove();
+            }
+            document.getElementById("showSignup")?.addEventListener("click", () => switchMode(!isSignupMode));
+        }
+        if(showSignup) showSignup.addEventListener("click", () => switchMode(true));
+
+        loginBtn.onclick = async () => {
+            loginBtn.classList.add("btn-loading");
+            loginBtn.innerText = isSignupMode ? "Creating..." : "Logging...";
+            await new Promise(r => setTimeout(r, 600));
+            if(isSignupMode) {
+                const uid = uidInput.value.trim();
+                const idName = document.getElementById("signupName")?.value.trim();
+                const level = document.getElementById("signupLevel")?.value.trim();
+                const fullName = document.getElementById("signupFullName")?.value.trim();
+                if(!uid || !idName || !level || !fullName) {
+                    document.getElementById("authError").innerText = "All fields required!";
+                    resetBtn();
+                    return;
+                }
+                if(users.find(u => u.uid === uid)) {
+                    document.getElementById("authError").innerText = "UID already exists!";
+                    resetBtn();
+                    return;
+                }
+                if(uid === "999") {
+                    document.getElementById("authError").innerText = "Invalid UID";
+                    resetBtn();
+                    return;
+                }
+                const newUser = { uid, name: idName, level, fullName, createdAt: new Date().toISOString(), isAdmin: false, banned: false, messages: [], lastSeenMsg: Date.now() };
+                users.push(newUser);
+                saveUsers();
+                alert("✅ Account created! Now login.");
+                switchMode(false);
+                uidInput.value = "";
+                resetBtn();
+            } else {
+                const uid = uidInput.value.trim();
+                const user = users.find(u => u.uid === uid && !u.banned);
+                if(!user) {
+                    document.getElementById("authError").innerHTML = "UID not correct or banned. <span id='createAccLink' class='switch-blue'>Create account</span>";
+                    const link = document.getElementById("createAccLink");
+                    if(link) link.onclick = () => switchMode(true);
+                    resetBtn();
+                    return;
+                }
+                if(user.uid === "999" && user.name === "ali hassan") {
+                    currentUser = user;
+                    render();
+                } else if(!user.isAdmin) {
+                    currentUser = user;
+                    render();
+                } else {
+                    document.getElementById("authError").innerText = "Invalid admin credentials";
+                    resetBtn();
+                }
+            }
+            function resetBtn() {
+                loginBtn.classList.remove("btn-loading");
+                loginBtn.innerText = isSignupMode ? "Create Account" : "Login";
+            }
+        };
+    }
+
+    // ---------- USER PANEL ----------
+    function renderUserPanel() {
+        const hasNewMsg = getUnreadCount(currentUser) > 0;
+        return `
+            <div class="container">
+                <div class="taskbar">
+                    <div class="logo">SENXIT <span style="font-size:0.7rem;">⚡FF Sensi</span></div>
+                    <div class="nav-icons">
+                        <div class="nav-item ${currentPanel === 'sensi' ? 'active' : ''}" data-panel="sensi"><i class="fas fa-chart-line"></i><span>Sensi</span></div>
+                        <div class="nav-item ${currentPanel === 'messages' ? 'active' : ''}" data-panel="messages" id="messagesNav">
+                            <i class="fas fa-envelope"></i><span>Messages</span>
+                            ${hasNewMsg ? '<div class="notification-dot"></div>' : ''}
+                        </div>
+                        <div class="nav-item ${currentPanel === 'tutorial' ? 'active' : ''}" data-panel="tutorial"><i class="fas fa-graduation-cap"></i><span>Tutorials</span></div>
+                        <div class="nav-item ${currentPanel === 'files' ? 'active' : ''}" data-panel="files"><i class="fas fa-folder-open"></i><span>Files</span></div>
+                        <div class="nav-item ${currentPanel === 'account' ? 'active' : ''}" data-panel="account"><i class="fas fa-user-circle"></i><span>Account</span></div>
+                    </div>
+                    <div class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Exit</div>
+                </div>
+                <div class="panel" id="dynamicPanel">Loading...</div>
+            </div>
+        `;
+    }
+
+    function renderSensiTab() {
+        const searchHtml = `<input type="text" id="sensiSearch" class="search-bar" placeholder="🔍 Search mobile model (e.g., iPhone 14, Samsung S23...)">`;
+        const grid = `<div id="mobileGrid" class="mobile-grid"></div>`;
+        document.getElementById("dynamicPanel").innerHTML = searchHtml + grid;
+        const renderModels = (filter="") => {
+            const filtered = Object.entries(sensitivities).filter(([key,val]) => val.modelDisplay.toLowerCase().includes(filter.toLowerCase()));
+            const container = document.getElementById("mobileGrid");
+            if(!container) return;
+            container.innerHTML = filtered.map(([key, sens]) => `
+                <div class="mobile-card" data-model='${JSON.stringify(sens)}'>
+                    <h3>📱 ${sens.modelDisplay}</h3>
+                    <div><strong>DPI:</strong> ${sens.dpi}</div>
+                    <div class="sensi-row">🎮 General: ${sens.general} <button class="copy-btn" data-val="${sens.general}">Copy</button></div>
+                    <div class="sensi-row">🔭 2x Scope: ${sens.scope2x} <button class="copy-btn" data-val="${sens.scope2x}">Copy</button></div>
+                    <div class="sensi-row">🔭 4x Scope: ${sens.scope4x} <button class="copy-btn" data-val="${sens.scope4x}">Copy</button></div>
+                    <div class="sensi-row">🎯 Sniper: ${sens.sniper} <button class="copy-btn" data-val="${sens.sniper}">Copy</button></div>
+                    <div class="sensi-row">📷 Free Camera: ${sens.freeCamera} <button class="copy-btn" data-val="${sens.freeCamera}">Copy</button></div>
+                </div>
+            `).join("");
+            document.querySelectorAll(".mobile-card").forEach(card => {
+                card.addEventListener("click", (e) => {
+                    if(e.target.classList.contains("copy-btn")) return;
+                    const sensData = JSON.parse(card.dataset.model);
+                    showBigSensitivityModal(sensData);
+                });
+            });
+            document.querySelectorAll(".copy-btn").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    navigator.clipboard.writeText(btn.dataset.val);
+                    alert("Copied: "+btn.dataset.val);
+                });
+            });
+        };
+        renderModels();
+        document.getElementById("sensiSearch").addEventListener("input", (e) => renderModels(e.target.value));
+    }
+
+    function showBigSensitivityModal(sens) {
+        const modal = document.createElement("div");
+        modal.className = "modal";
+        modal.innerHTML = `
+            <div class="modal-content">
+                <h2 style="margin-bottom:1rem;">📱 ${sens.modelDisplay}</h2>
+                <p><strong>DPI:</strong> ${sens.dpi}</p>
+                <p><strong>General:</strong> ${sens.general}</p>
+                <p><strong>2x Scope:</strong> ${sens.scope2x}</p>
+                <p><strong>4x Scope:</strong> ${sens.scope4x}</p>
+                <p><strong>Sniper Scope:</strong> ${sens.sniper}</p>
+                <p><strong>Free Camera:</strong> ${sens.freeCamera}</p>
+                <button class="btn" id="closeModalBtn" style="margin-top:1rem;">Close</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        modal.style.display = "flex";
+        document.getElementById("closeModalBtn").onclick = () => modal.remove();
+        modal.onclick = (e) => { if(e.target === modal) modal.remove(); };
+    }
+
+    function renderMessagesTab() {
+        markMessagesRead(currentUser);
+        const messages = currentUser.messages || [];
+        const chatHtml = `
+            <div class="chat-box" id="chatMessages"></div>
+            <div style="display:flex; gap:0.5rem;">
+                <input type="text" id="messageInput" class="search-bar" placeholder="Type mobile model to get sensitivity OR send message to admin..." style="flex:1">
+                <button id="sendMsgBtn" class="btn" style="width:auto; padding:0 1.5rem;">Send</button>
+            </div>
+        `;
+        document.getElementById("dynamicPanel").innerHTML = chatHtml;
+        const chatContainer = document.getElementById("chatMessages");
+        function renderChat() {
+            chatContainer.innerHTML = messages.slice().reverse().map(msg => {
+                const isUserMsg = msg.sender === 'user';
+                return `
+                    <div class="message ${isUserMsg ? 'message-user' : 'message-admin'}">
+                        <div class="bubble ${isUserMsg ? 'bubble-user' : 'bubble-admin'}">
+                            ${msg.text}<br><span style="font-size:0.6rem; opacity:0.7;">${new Date(msg.timestamp).toLocaleString()}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        renderChat();
+        document.getElementById("sendMsgBtn").onclick = () => {
+            const input = document.getElementById("messageInput");
+            const text = input.value.trim();
+            if(!text) return;
+            const sens = getSensitivity(text);
+            if(sens) {
+                const reply = `✅ Sensitivity for ${sens.modelDisplay}: General ${sens.general} | 2x ${sens.scope2x} | 4x ${sens.scope4x} | Sniper ${sens.sniper} | FreeCam ${sens.freeCamera} | DPI ${sens.dpi}`;
+                currentUser.messages.push({ text: reply, timestamp: new Date().toISOString(), sender: 'admin' });
+                currentUser.messages.push({ text: `📱 ${text}`, timestamp: new Date().toISOString(), sender: 'user' });
+                saveUsers();
+            } else {
+                sendUserToAdmin(text);
+            }
+            input.value = "";
+            renderMessagesTab();
+        };
+    }
+
+    function renderTutorialTab() {
+        document.getElementById("dynamicPanel").innerHTML = `
+            <h3>📘 Free Fire Tutorials</h3>
+            <div id="tutorialsList"></div>
+        `;
+        const container = document.getElementById("tutorialsList");
+        function renderTuts() {
+            container.innerHTML = tutorials.map(tut => `
+                <div class="tutorial-card">
+                    <div><strong>${escapeHtml(tut.title)}</strong><br><small>Added: ${new Date(tut.createdAt).toLocaleDateString()}</small></div>
+                    <button class="watch-btn copy-btn" data-link="${tut.link}">▶ Watch Tutorial</button>
+                </div>
+            `).join('');
+            document.querySelectorAll(".watch-btn").forEach(btn => {
+                btn.addEventListener("click", async (e) => {
+                    const originalText = btn.innerText;
+                    btn.innerText = "⏳ Loading...";
+                    btn.disabled = true;
+                    await new Promise(r => setTimeout(r, 800));
+                    window.open(btn.dataset.link, "_blank");
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                });
+            });
+        }
+        renderTuts();
+    }
+
+    function renderFilesTab() {
+        document.getElementById("dynamicPanel").innerHTML = `
+            <h3>📁 Available Files & Resources</h3>
+            <div id="filesGrid" class="file-grid"></div>
+        `;
+        const container = document.getElementById("filesGrid");
+        function renderFiles() {
+            container.innerHTML = files.map(file => `
+                <div class="file-card" data-fileid="${file.id}">
+                    <img src="${file.images[0] || 'https://via.placeholder.com/400x225?text=No+Image'}" class="file-thumb" alt="thumbnail">
+                    <div class="file-info">
+                        <div class="file-title">${escapeHtml(file.title)}</div>
+                        <div class="file-desc">${escapeHtml(file.description)}</div>
+                        <div style="font-size:0.7rem; color:#64748b;">${file.images.length} image(s)</div>
+                    </div>
+                </div>
+            `).join('');
+            document.querySelectorAll(".file-card").forEach(card => {
+                card.addEventListener("click", () => {
+                    const fileId = card.dataset.fileid;
+                    const file = files.find(f => f.id === fileId);
+                    if(file) showFileModal(file);
+                });
+            });
+        }
+        renderFiles();
+    }
+
+    function showFileModal(file) {
+        let currentImageIndex = 0;
+        const modal = document.createElement("div");
+        modal.className = "file-modal";
+        modal.innerHTML = `
+            <div class="file-modal-content">
+                <button id="closeFileModal" style="position:absolute; top:10px; right:20px; background:red; border:none; color:white; padding:0.3rem 0.8rem; border-radius:2rem; cursor:pointer;">✕</button>
+                <h3 style="margin-bottom:0.5rem;">${escapeHtml(file.title)}</h3>
+                <p style="margin-bottom:1rem;">${escapeHtml(file.description)}</p>
+                <div id="carouselContainer" style="text-align:center;">
+                    <img id="carouselImg" class="carousel-img" src="${file.images[0]}" alt="file image">
+                </div>
+                <div class="carousel-nav">
+                    <button id="prevImgBtn" class="copy-btn" ${file.images.length <= 1 ? 'disabled style="opacity:0.5;"' : ''}>◀ Prev</button>
+                    <span id="imgCounter">1 / ${file.images.length}</span>
+                    <button id="nextImgBtn" class="copy-btn" ${file.images.length <= 1 ? 'disabled style="opacity:0.5;"' : ''}>Next ▶</button>
+                </div>
+                <button id="downloadFileBtn" class="btn download-file-btn" style="margin-top:1rem;">📥 Download / Open</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        modal.style.display = "flex";
+        const imgElement = document.getElementById("carouselImg");
+        const counterSpan = document.getElementById("imgCounter");
+        const prevBtn = document.getElementById("prevImgBtn");
+        const nextBtn = document.getElementById("nextImgBtn");
+
+        function updateImage() {
+            imgElement.src = file.images[currentImageIndex];
+            counterSpan.innerText = `${currentImageIndex+1} / ${file.images.length}`;
+            prevBtn.disabled = file.images.length <= 1;
+            nextBtn.disabled = file.images.length <= 1;
+        }
+        prevBtn.onclick = () => {
+            if(currentImageIndex > 0) {
+                currentImageIndex--;
+                updateImage();
+            }
+        };
+        nextBtn.onclick = () => {
+            if(currentImageIndex < file.images.length-1) {
+                currentImageIndex++;
+                updateImage();
+            }
+        };
+        document.getElementById("closeFileModal").onclick = () => modal.remove();
+        modal.onclick = (e) => { if(e.target === modal) modal.remove(); };
+        const downloadBtn = document.getElementById("downloadFileBtn");
+        downloadBtn.onclick = async () => {
+            downloadBtn.classList.add("btn-loading");
+            downloadBtn.innerText = "Loading...";
+            await new Promise(r => setTimeout(r, 800));
+            if(file.fileData.type === 'url') {
+                window.open(file.fileData.url, "_blank");
+            } else {
+                const a = document.createElement('a');
+                a.href = file.fileData.base64;
+                a.download = file.fileData.name || 'file';
+                a.click();
+            }
+            downloadBtn.classList.remove("btn-loading");
+            downloadBtn.innerText = "📥 Download / Open";
+        };
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function renderAccountTab() {
+        const u = currentUser;
+        document.getElementById("dynamicPanel").innerHTML = `
+            <div style="background:#111c2e; border-radius:2rem; padding:1.5rem;">
+                <h3><i class="fas fa-id-card"></i> Account Details</h3>
+                <p><strong>UID:</strong> ${u.uid}</p>
+                <p><strong>Username:</strong> ${u.name}</p>
+                <p><strong>Full Name:</strong> ${u.fullName}</p>
+                <p><strong>Level:</strong> ${u.level}</p>
+                <p><strong>Joined:</strong> ${new Date(u.createdAt).toLocaleString()}</p>
+            </div>
+        `;
+    }
+
+    function attachUserEvents() {
+        document.querySelectorAll(".nav-item").forEach(el => {
+            el.addEventListener("click", () => {
+                currentPanel = el.dataset.panel;
+                render();
+            });
+        });
+        document.getElementById("logoutBtn")?.addEventListener("click", () => { currentUser = null; render(); });
+    }
+
+    // ---------- ADMIN PANEL ----------
+    function renderAdminPanel() {
+        const hasNewAdminMsg = getUnreadCount(users.find(u => u.uid === "999")) > 0;
+        return `
+            <div class="container">
+                <div class="taskbar">
+                    <div class="logo">ADMIN PANEL • SENXIT</div>
+                    <div class="nav-icons">
+                        <div class="nav-item ${adminSubPage === 'addSensi' ? 'active' : ''}" data-admin="addSensi"><i class="fas fa-plus-circle"></i><span>Add Sensi</span></div>
+                        <div class="nav-item ${adminSubPage === 'allSensi' ? 'active' : ''}" data-admin="allSensi"><i class="fas fa-list"></i><span>All Sensi</span></div>
+                        <div class="nav-item ${adminSubPage === 'userAccounts' ? 'active' : ''}" data-admin="userAccounts"><i class="fas fa-users"></i><span>User Accounts</span></div>
+                        <div class="nav-item ${adminSubPage === 'inbox' ? 'active' : ''}" data-admin="inbox" id="adminInboxNav">
+                            <i class="fas fa-inbox"></i><span>Inbox</span>
+                            ${hasNewAdminMsg ? '<div class="notification-dot"></div>' : ''}
+                        </div>
+                        <div class="nav-item ${adminSubPage === 'addTutorial' ? 'active' : ''}" data-admin="addTutorial"><i class="fas fa-video"></i><span>Add Tutorial</span></div>
+                        <div class="nav-item ${adminSubPage === 'manageTutorials' ? 'active' : ''}" data-admin="manageTutorials"><i class="fas fa-edit"></i><span>Manage Tutorials</span></div>
+                        <div class="nav-item ${adminSubPage === 'addFile' ? 'active' : ''}" data-admin="addFile"><i class="fas fa-file-alt"></i><span>Add File</span></div>
+                        <div class="nav-item ${adminSubPage === 'manageFiles' ? 'active' : ''}" data-admin="manageFiles"><i class="fas fa-folder-open"></i><span>Manage Files</span></div>
+                    </div>
+                    <div class="logout-btn" id="adminLogout"><i class="fas fa-sign-out-alt"></i> Exit</div>
+                </div>
+                <div class="panel" id="adminDynamic">Loading...</div>
+            </div>
+        `;
+    }
+
+    function renderAddSensi() {
+        return `
+            <h3>➕ Add New Mobile Sensitivity</h3>
+            <input type="text" id="modelName" class="input-field" placeholder="Mobile model (e.g., iPhone 15 Pro)">
+            <input type="number" id="genVal" class="input-field" placeholder="General sensitivity (0-200)" min="0" max="200">
+            <input type="number" id="x2Val" class="input-field" placeholder="2x Scope (0-200)">
+            <input type="number" id="x4Val" class="input-field" placeholder="4x Scope">
+            <input type="number" id="sniperVal" class="input-field" placeholder="Sniper Scope">
+            <input type="number" id="freeCamVal" class="input-field" placeholder="Free Camera">
+            <input type="number" id="dpiVal" class="input-field" placeholder="DPI">
+            <button id="submitSensiBtn" class="btn">Add Sensitivity</button>
+            <div id="adminResult"></div>
+        `;
+    }
+
+    function renderAllSensi() {
+        const sensiList = Object.entries(sensitivities);
+        return `
+            <h3>📋 All Sensitivities (${sensiList.length})</h3>
+            <div id="sensiListContainer">
+                ${sensiList.map(([key, sens]) => `
+                    <div class="sensi-item" data-key="${key}">
+                        <div><strong>${sens.modelDisplay}</strong><br>Gen:${sens.general} | 2x:${sens.scope2x} | 4x:${sens.scope4x} | Snip:${sens.sniper} | Free:${sens.freeCamera} | DPI:${sens.dpi}</div>
+                        <div>
+                            <button class="copy-btn edit-sensi" data-key="${key}">✏️ Edit</button>
+                            <button class="copy-btn delete-sensi" data-key="${key}" style="background:#dc2626">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            <div id="editModal" style="display:none; margin-top:1rem; background:#1e293b; padding:1rem; border-radius:1rem;"></div>
+        `;
+    }
+
+    function renderUserAccounts() {
+        const nonAdmin = users.filter(u => !u.isAdmin);
+        return `
+            <h3>👥 Registered Users (${nonAdmin.length})</h3>
+            ${nonAdmin.map(u => `
+                <div class="user-list-item" data-uid="${u.uid}">
+                    <div>
+                        <strong>${u.name}</strong> (${u.uid})<br>
+                        Level: ${u.level}<br>
+                        Joined: ${new Date(u.createdAt).toLocaleString()}<br>
+                        <span style="color:${u.banned ? 'red' : 'lightgreen'}">${u.banned ? 'Banned' : 'Active'}</span>
+                    </div>
+                    <div style="display:flex; gap:0.5rem;">
+                        <button class="copy-btn" data-banuid="${u.uid}" style="background:#dc2626">${u.banned ? "Unban" : "Ban"}</button>
+                        <button class="copy-btn" data-deluid="${u.uid}" style="background:#991b1b">Delete</button>
+                    </div>
+                </div>
+            `).join('')}
+        `;
+    }
+
+    function renderInbox() {
+        const usersWithChat = users.filter(u => !u.isAdmin && u.messages && u.messages.length > 0);
+        const adminUser = users.find(u => u.uid === "999");
+        return `
+            <h3>📩 Inbox (WhatsApp Style)</h3>
+            ${adminChatTarget ? renderChatWithUser(adminChatTarget) : `
+                <div id="inboxList">
+                    ${usersWithChat.map(u => {
+                        const userUnread = (adminUser?.messages || []).filter(m => m.sender === u.uid && new Date(m.timestamp).getTime() > (adminUser.lastSeenMsg || 0)).length;
+                        return `
+                            <div class="inbox-item" data-uid="${u.uid}" data-name="${u.name}">
+                                <div><i class="fas fa-user-circle"></i> <strong>${u.name}</strong> (${u.uid})</div>
+                                ${userUnread > 0 ? `<span class="unread-badge">${userUnread} new</span>` : ''}
+                            </div>
+                        `;
+                    }).join('')}
+                    ${usersWithChat.length === 0 ? '<div>No messages yet.</div>' : ''}
+                </div>
+            `}
+        `;
+    }
+
+    function renderChatWithUser(target) {
+        const user = users.find(u => u.uid === target.uid);
+        const messages = user ? user.messages : [];
+        return `
+            <button id="backToInbox" class="btn back-btn"><i class="fas fa-arrow-left"></i> Back to Inbox</button>
+            <div class="conversation-view">
+                <h4>Chat with ${target.name} (${target.uid})</h4>
+                <div class="chat-box" id="adminChatBox" style="height:350px;"></div>
+                <div class="admin-msg-input">
+                    <input type="text" id="adminChatInput" class="small-input" placeholder="Type message...">
+                    <button id="adminSendMsg" class="copy-btn" style="background:#3b82f6;">Send</button>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderAddTutorial() {
+        return `
+            <h3>📘 Add New Tutorial</h3>
+            <input type="text" id="tutTitle" class="input-field" placeholder="Tutorial Title">
+            <input type="text" id="tutLink" class="input-field" placeholder="Video Link (YouTube, etc.)">
+            <button id="submitTutorialBtn" class="btn">Add Tutorial</button>
+            <div id="tutResult"></div>
+        `;
+    }
+
+    function renderManageTutorials() {
+        return `
+            <h3>📚 Manage Tutorials (${tutorials.length})</h3>
+            <div id="manageTutsList">
+                ${tutorials.map(tut => `
+                    <div class="sensi-item" data-tutid="${tut.id}">
+                        <div><strong>${escapeHtml(tut.title)}</strong><br>Link: ${escapeHtml(tut.link)}</div>
+                        <div>
+                            <button class="copy-btn edit-tut" data-tutid="${tut.id}">✏️ Edit</button>
+                            <button class="copy-btn delete-tut" data-tutid="${tut.id}" style="background:#dc2626">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            <div id="editTutModal" style="display:none; margin-top:1rem; background:#1e293b; padding:1rem; border-radius:1rem;"></div>
+        `;
+    }
+
+    function renderAddFile() {
+        return `
+            <h3>📁 Add New File Resource</h3>
+            <input type="text" id="fileTitle" class="input-field" placeholder="File Title">
+            <textarea id="fileDesc" class="input-field" placeholder="File Description"></textarea>
+            <div id="imagesContainer">
+                <div class="image-input-group">
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                        <input type="file" accept="image/*" class="image-file-input" style="background:#1e293b; padding:0.5rem; border-radius:1rem; color:white;">
+                        <input type="text" class="input-field img-url" placeholder="OR Image URL" style="flex:1;">
+                    </div>
+                    <div class="image-preview"></div>
+                </div>
+            </div>
+            <button id="addMoreImages" class="copy-btn" style="margin:0.5rem 0;">+ Add More Images</button>
+            <div class="file-input-group">
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <input type="file" id="fileUploadInput" style="background:#1e293b; padding:0.5rem; border-radius:1rem; color:white;">
+                    <input type="text" id="fileUrlInput" class="input-field" placeholder="OR File URL" style="flex:1;">
+                </div>
+            </div>
+            <button id="submitFileBtn" class="btn">Add File</button>
+            <div id="fileResult"></div>
+        `;
+    }
+
+    function renderManageFiles() {
+        return `
+            <h3>📂 Manage Files (${files.length})</h3>
+            <div id="manageFilesList">
+                ${files.map(file => `
+                    <div class="sensi-item" data-fileid="${file.id}">
+                        <div><strong>${escapeHtml(file.title)}</strong><br>${escapeHtml(file.description.substring(0,50))}...<br>Images: ${file.images.length}</div>
+                        <button class="copy-btn delete-file" data-fileid="${file.id}" style="background:#dc2626">Delete</button>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function attachAdminEvents() {
+        document.querySelectorAll("[data-admin]").forEach(el => {
+            el.addEventListener("click", () => {
+                adminSubPage = el.dataset.admin;
+                adminChatTarget = null;
+                render();
+            });
+        });
+        document.getElementById("adminLogout")?.addEventListener("click", () => { currentUser = null; render(); });
+        const container = document.getElementById("adminDynamic");
+        if(adminSubPage === "addSensi") {
+            container.innerHTML = renderAddSensi();
+            document.getElementById("submitSensiBtn")?.addEventListener("click", () => {
+                const model = document.getElementById("modelName").value.trim();
+                const g = parseInt(document.getElementById("genVal").value);
+                const x2 = parseInt(document.getElementById("x2Val").value);
+                const x4 = parseInt(document.getElementById("x4Val").value);
+                const sn = parseInt(document.getElementById("sniperVal").value);
+                const free = parseInt(document.getElementById("freeCamVal").value);
+                const dpi = parseInt(document.getElementById("dpiVal").value);
+                if(!model || isNaN(g) || isNaN(x2) || isNaN(x4) || isNaN(sn) || isNaN(free) || isNaN(dpi)) {
+                    document.getElementById("adminResult").innerHTML = "<span style='color:red'>All fields required</span>";
+                    return;
+                }
+                addSensitivity(model, g, x2, x4, sn, free, dpi);
+                document.getElementById("adminResult").innerHTML = "<span style='color:green'>✅ Sensitivity added!</span>";
+                setTimeout(() => render(), 1200);
+            });
+        } 
+        else if(adminSubPage === "allSensi") {
+            container.innerHTML = renderAllSensi();
+            attachSensiEditDeleteEvents();
+        }
+        else if(adminSubPage === "userAccounts") {
+            container.innerHTML = renderUserAccounts();
+            document.querySelectorAll("[data-banuid]").forEach(btn => {
+                btn.onclick = () => {
+                    const uid = btn.dataset.banuid;
+                    const user = users.find(u => u.uid === uid);
+                    if(user) user.banned = !user.banned;
+                    saveUsers();
+                    render();
+                };
+            });
+            document.querySelectorAll("[data-deluid]").forEach(btn => {
+                btn.onclick = () => {
+                    if(confirm("Delete user permanently?")) {
+                        const uid = btn.dataset.deluid;
+                        users = users.filter(u => u.uid !== uid);
+                        saveUsers();
+                        render();
+                    }
+                };
+            });
+        }
+        else if(adminSubPage === "inbox") {
+            container.innerHTML = renderInbox();
+            const adminUser = users.find(u => u.uid === "999");
+            if(adminUser) markMessagesRead(adminUser);
+            if(!adminChatTarget) {
+                document.querySelectorAll(".inbox-item").forEach(el => {
+                    el.addEventListener("click", () => {
+                        adminChatTarget = { uid: el.dataset.uid, name: el.dataset.name };
+                        render();
+                    });
+                });
+            } else {
+                const user = users.find(u => u.uid === adminChatTarget.uid);
+                const messages = user ? user.messages : [];
+                const chatBox = document.getElementById("adminChatBox");
+                if(chatBox) {
+                    chatBox.innerHTML = messages.slice().reverse().map(msg => {
+                        const isAdminMsg = msg.sender === 'admin';
+                        return `
+                            <div class="message ${isAdminMsg ? 'message-user' : 'message-admin'}">
+                                <div class="bubble ${isAdminMsg ? 'bubble-user' : 'bubble-admin'}">
+                                    ${msg.text}<br><span style="font-size:0.6rem;">${new Date(msg.timestamp).toLocaleString()}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+                document.getElementById("adminSendMsg")?.addEventListener("click", () => {
+                    const input = document.getElementById("adminChatInput");
+                    const msg = input.value.trim();
+                    if(!msg) return;
+                    sendAdminToUser(adminChatTarget.uid, msg);
+                    input.value = "";
+                    render();
+                });
+                document.getElementById("backToInbox")?.addEventListener("click", () => {
+                    adminChatTarget = null;
+                    render();
+                });
+            }
+        }
+        else if(adminSubPage === "addTutorial") {
+            container.innerHTML = renderAddTutorial();
+            document.getElementById("submitTutorialBtn")?.addEventListener("click", async () => {
+                const title = document.getElementById("tutTitle").value.trim();
+                const link = document.getElementById("tutLink").value.trim();
+                if(!title || !link) {
+                    document.getElementById("tutResult").innerHTML = "<span style='color:red'>Both fields required</span>";
+                    return;
+                }
+                const btn = document.getElementById("submitTutorialBtn");
+                btn.classList.add("btn-loading");
+                btn.innerText = "Adding...";
+                await new Promise(r => setTimeout(r, 800));
+                addTutorial(title, link);
+                btn.classList.remove("btn-loading");
+                btn.innerText = "Add Tutorial";
+                document.getElementById("tutResult").innerHTML = "<span style='color:green'>✅ Tutorial added!</span>";
+                setTimeout(() => render(), 1000);
+            });
+        }
+        else if(adminSubPage === "manageTutorials") {
+            container.innerHTML = renderManageTutorials();
+            // Edit tutorial
+            document.querySelectorAll(".edit-tut").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const tutId = btn.dataset.tutid;
+                    const tut = tutorials.find(t => t.id === tutId);
+                    const modal = document.getElementById("editTutModal");
+                    modal.style.display = "block";
+                    modal.innerHTML = `
+                        <h4>Edit Tutorial</h4>
+                        <input type="text" id="editTutTitle" class="input-field" value="${escapeHtml(tut.title)}">
+                        <input type="text" id="editTutLink" class="input-field" value="${escapeHtml(tut.link)}">
+                        <button id="saveTutBtn" class="btn" data-tutid="${tutId}">Save Changes</button>
+                        <button id="cancelTutBtn" class="btn" style="background:#475569;">Cancel</button>
+                    `;
+                    document.getElementById("saveTutBtn").onclick = () => {
+                        const newTitle = document.getElementById("editTutTitle").value.trim();
+                        const newLink = document.getElementById("editTutLink").value.trim();
+                        if(!newTitle || !newLink) {
+                            alert("Both fields required");
+                            return;
+                        }
+                        updateTutorial(tutId, newTitle, newLink);
+                        render();
+                    };
+                    document.getElementById("cancelTutBtn").onclick = () => { render(); };
+                });
+            });
+            // Delete tutorial
+            document.querySelectorAll(".delete-tut").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    if(confirm("Delete this tutorial?")) {
+                        deleteTutorial(btn.dataset.tutid);
+                        render();
+                    }
+                });
+            });
+        }
+        else if(adminSubPage === "addFile") {
+            container.innerHTML = renderAddFile();
+            let imageGroups = [];
+            function addImageGroup(containerDiv) {
+                const groupDiv = document.createElement("div");
+                groupDiv.className = "image-input-group";
+                groupDiv.innerHTML = `
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                        <input type="file" accept="image/*" class="image-file-input" style="background:#1e293b; padding:0.5rem; border-radius:1rem; color:white;">
+                        <input type="text" class="input-field img-url" placeholder="OR Image URL" style="flex:1;">
+                        <button class="copy-btn remove-img" style="background:#dc2626;">Remove</button>
+                    </div>
+                    <div class="image-preview"></div>
+                `;
+                containerDiv.appendChild(groupDiv);
+                const fileInput = groupDiv.querySelector(".image-file-input");
+                const urlInput = groupDiv.querySelector(".img-url");
+                const previewDiv = groupDiv.querySelector(".image-preview");
+                const updatePreview = () => {
+                    previewDiv.innerHTML = '';
+                    if(urlInput.value.trim()) {
+                        const img = document.createElement('img');
+                        img.src = urlInput.value.trim();
+                        img.className = "preview-img";
+                        img.onerror = () => img.remove();
+                        previewDiv.appendChild(img);
+                    }
+                };
+                fileInput.onchange = async (e) => {
+                    if(fileInput.files[0]) {
+                        const base64 = await readFileAsBase64(fileInput.files[0]);
+                        urlInput.value = base64;
+                        updatePreview();
+                    }
+                };
+                urlInput.oninput = updatePreview;
+                groupDiv.querySelector(".remove-img").onclick = () => groupDiv.remove();
+                return groupDiv;
+            }
+            const imagesContainer = document.getElementById("imagesContainer");
+            addImageGroup(imagesContainer);
+            document.getElementById("addMoreImages")?.addEventListener("click", () => {
+                addImageGroup(imagesContainer);
+            });
+            document.getElementById("submitFileBtn")?.addEventListener("click", async () => {
+                const title = document.getElementById("fileTitle").value.trim();
+                const desc = document.getElementById("fileDesc").value.trim();
+                const fileUpload = document.getElementById("fileUploadInput").files[0];
+                const fileUrl = document.getElementById("fileUrlInput").value.trim();
+                let fileData = null;
+                if(fileUpload) {
+                    const base64 = await readFileAsBase64(fileUpload);
+                    fileData = { type: 'base64', base64: base64, name: fileUpload.name };
+                } else if(fileUrl) {
+                    fileData = { type: 'url', url: fileUrl };
+                } else {
+                    document.getElementById("fileResult").innerHTML = "<span style='color:red'>Please select a file from device OR enter a file URL</span>";
+                    return;
+                }
+                const imageGroups = document.querySelectorAll("#imagesContainer .image-input-group");
+                const images = [];
+                for(let group of imageGroups) {
+                    const urlInput = group.querySelector(".img-url");
+                    if(urlInput && urlInput.value.trim()) {
+                        images.push(urlInput.value.trim());
+                    }
+                }
+                if(images.length === 0) {
+                    document.getElementById("fileResult").innerHTML = "<span style='color:red'>At least one image required (upload or URL)</span>";
+                    return;
+                }
+                if(!title || !desc) {
+                    document.getElementById("fileResult").innerHTML = "<span style='color:red'>Title and description required</span>";
+                    return;
+                }
+                const btn = document.getElementById("submitFileBtn");
+                btn.classList.add("btn-loading");
+                btn.innerText = "Adding...";
+                await new Promise(r => setTimeout(r, 800));
+                addFile(title, desc, images, fileData);
+                btn.classList.remove("btn-loading");
+                btn.innerText = "Add File";
+                document.getElementById("fileResult").innerHTML = "<span style='color:green'>✅ File added successfully!</span>";
+                setTimeout(() => render(), 1000);
+            });
+        }
+        else if(adminSubPage === "manageFiles") {
+            container.innerHTML = renderManageFiles();
+            document.querySelectorAll(".delete-file").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    if(confirm("Delete this file permanently?")) {
+                        deleteFile(btn.dataset.fileid);
+                        render();
+                    }
+                });
+            });
+        }
+    }
+
+    function attachSensiEditDeleteEvents() {
+        document.querySelectorAll(".edit-sensi").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const key = btn.dataset.key;
+                const sens = sensitivities[key];
+                const modal = document.getElementById("editModal");
+                modal.style.display = "block";
+                modal.innerHTML = `
+                    <h4>Edit ${sens.modelDisplay}</h4>
+                    <input type="text" id="editModel" class="input-field" value="${sens.modelDisplay}">
+                    <input type="number" id="editGen" class="input-field" value="${sens.general}">
+                    <input type="number" id="edit2x" class="input-field" value="${sens.scope2x}">
+                    <input type="number" id="edit4x" class="input-field" value="${sens.scope4x}">
+                    <input type="number" id="editSniper" class="input-field" value="${sens.sniper}">
+                    <input type="number" id="editFree" class="input-field" value="${sens.freeCamera}">
+                    <input type="number" id="editDpi" class="input-field" value="${sens.dpi}">
+                    <button id="saveEditBtn" class="btn" data-oldkey="${key}">Save Changes</button>
+                    <button id="cancelEditBtn" class="btn" style="background:#475569;">Cancel</button>
+                `;
+                document.getElementById("saveEditBtn").onclick = () => {
+                    const newModel = document.getElementById("editModel").value.trim();
+                    const newGen = parseInt(document.getElementById("editGen").value);
+                    const new2x = parseInt(document.getElementById("edit2x").value);
+                    const new4x = parseInt(document.getElementById("edit4x").value);
+                    const newSn = parseInt(document.getElementById("editSniper").value);
+                    const newFree = parseInt(document.getElementById("editFree").value);
+                    const newDpi = parseInt(document.getElementById("editDpi").value);
+                    if(!newModel || isNaN(newGen) || isNaN(new2x) || isNaN(new4x) || isNaN(newSn) || isNaN(newFree) || isNaN(newDpi)) {
+                        alert("Invalid values");
+                        return;
+                    }
+                    updateSensitivity(key, newModel, newGen, new2x, new4x, newSn, newFree, newDpi);
+                    render();
+                };
+                document.getElementById("cancelEditBtn").onclick = () => { render(); };
+            });
+        });
+        document.querySelectorAll(".delete-sensi").forEach(btn => {
+            btn.addEventListener("click", () => {
+                if(confirm("Delete this sensitivity?")) {
+                    deleteSensitivity(btn.dataset.key);
+                    render();
+                }
+            });
+        });
+    }
+
+    loadData();
+    render();
+</script>
+</body>
+</html>
